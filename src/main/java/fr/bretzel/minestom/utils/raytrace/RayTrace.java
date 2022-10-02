@@ -1,4 +1,4 @@
-package fr.bretzel.minestom.utils.block;
+package fr.bretzel.minestom.utils.raytrace;
 
 import fr.bretzel.minestom.utils.TriFunction;
 import fr.bretzel.minestom.utils.block.shape.BoxManager;
