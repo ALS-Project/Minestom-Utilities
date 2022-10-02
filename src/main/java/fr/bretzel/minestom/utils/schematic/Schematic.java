@@ -9,7 +9,7 @@ import org.jglrxavpok.hephaistos.nbt.NBTCompound;
 import java.io.File;
 import java.io.IOException;
 
-public interface ISchem {
+public interface Schematic {
 
     /**
      * Get the block as position
@@ -119,5 +119,5 @@ public interface ISchem {
      * @param file file to be saved
      * @return the current shem instance
      */
-    ISchem save(@NotNull File file) throws IOException;
+    Schematic save(@NotNull File file) throws IOException;
 }

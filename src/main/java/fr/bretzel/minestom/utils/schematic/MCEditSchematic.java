@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
 
 //Ported from WorldEdit: https://github.com/EngineHub/WorldEdit/blob/a806c53287f754365b7a3d9a775226365466ab11/src/main/java/com/sk89q/worldedit/schematic/MCEditSchematicFormat.java
-public class MCEditSchematic implements ISchem {
+public class MCEditSchematic implements Schematic {
     private static final int MAX_SIZE = Short.MAX_VALUE - Short.MIN_VALUE;
 
     private Pos origin = Pos.ZERO;
@@ -210,7 +210,7 @@ public class MCEditSchematic implements ISchem {
     }
 
     @Override
-    public @NotNull ISchem save(@NotNull File file) throws IOException {
+    public @NotNull Schematic save(@NotNull File file) throws IOException {
         if (!file.exists())
             FileUtils.createNewFile(file);
 

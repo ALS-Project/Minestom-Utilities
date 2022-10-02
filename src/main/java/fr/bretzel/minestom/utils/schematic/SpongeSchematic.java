@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 //from https://github.com/sejtam10/MineSchem/blob/404ff5b0aafd8d13e7a29ee9ee37f355c66d7107/MineSchem-Core/src/main/java/dev/sejtam/mineschem/core/schematic/SpongeSchematic.java
-public class SpongeSchematic implements ISchem {
+public class SpongeSchematic implements Schematic {
 
     private final Pos offset = Pos.ZERO;
     private final Map<Point, Block> blockMap = new HashMap<>();
@@ -147,7 +147,7 @@ public class SpongeSchematic implements ISchem {
     }
 
     @Override
-    public ISchem save(@NotNull File file) throws IOException {
+    public Schematic save(@NotNull File file) throws IOException {
         var maxPalette = 0;
         var palette = new HashMap<String, Integer>();
         var outputStream = new ByteArrayOutputStream(width * height * length);
