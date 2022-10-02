@@ -1,6 +1,6 @@
 package fr.bretzel.minestom.utils.schematic;
 
-import fr.bretzel.minestom.utils.BlockUtils;
+import fr.bretzel.minestom.utils.block.BlockUtils;
 import fr.bretzel.minestom.utils.Handler;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Point;

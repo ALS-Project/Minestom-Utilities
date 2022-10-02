@@ -1,7 +1,7 @@
 package fr.bretzel.minestom.utils.raytrace;
 
-import fr.bretzel.minestom.utils.block.shape.shapes.Shape;
-import fr.bretzel.minestomstates.state.Facing;
+import fr.bretzel.minestom.utils.block.shapes.Shape;
+import fr.bretzel.minestom.states.state.Facing;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
