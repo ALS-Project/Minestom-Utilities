@@ -14,7 +14,7 @@ repositories {
 dependencies {
     implementation("com.github.Minestom:Minestom:18c46481f4")
 
-    implementation("com.github.ALS-Project:Minestom-States:d628c0750f")
+    implementation("com.github.ALS-Project:Minestom-States:d42b0086f1")
 
 }
 
