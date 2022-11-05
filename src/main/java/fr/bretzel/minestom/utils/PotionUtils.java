@@ -7,8 +7,8 @@ import net.minestom.server.potion.TimedPotion;
 
 public class PotionUtils {
 
-    public static boolean hasPotionEffect(PotionEffect potionEffect, Entity livingEntity) {
-        return livingEntity.getActiveEffects().stream().anyMatch(timedPotion -> timedPotion.getPotion().effect() == potionEffect);
+    public static boolean hasPotionEffect(PotionEffect potionEffect, Entity entity) {
+        return entity.getActiveEffects().stream().anyMatch(timedPotion -> timedPotion.getPotion().effect() == potionEffect);
     }
 
     public static byte getPotionEffectLevel(PotionEffect potionEffect, Entity entity) {

@@ -41,13 +41,13 @@ public class StringUtils {
                 outputStream.write(buffer, 0, count);
             }
         } catch (Exception e) {
-            Handler.handle(e);
+            e.printStackTrace();
         }
 
         try {
             outputStream.close();
         } catch (IOException e) {
-            Handler.handle(e);
+            e.printStackTrace();
         }
         return outputStream.toByteArray();
     }

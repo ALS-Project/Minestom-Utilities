@@ -20,15 +20,13 @@ public class RayBlockResult {
     private final Shape hitShape;
 
     public RayBlockResult(Point blockPosition, Point hitLocation, RayTraceContext context, Facing facing, Shape hitShape) {
-        this.hit = hitLocation;
+        this.hit = hitLocation.add(context.direction().mul(0.0001));;
         this.blockPosition = blockPosition;
         this.context = context;
         this.instance = context.instance();
         this.blockFace = facing;
 
         this.hitShape = hitShape;
-
-        this.hit.add(context.direction().mul(0.0001));
     }
 
     public Block getHitBlock() {
