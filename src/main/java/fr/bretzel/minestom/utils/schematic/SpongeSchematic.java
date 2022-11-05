@@ -47,7 +47,7 @@ public class SpongeSchematic implements Schematic {
 
             nbtReader.close();
         } catch (IOException | NBTException e) {
-            Handler.handle(e);
+            e.printStackTrace();
         }
     }
 

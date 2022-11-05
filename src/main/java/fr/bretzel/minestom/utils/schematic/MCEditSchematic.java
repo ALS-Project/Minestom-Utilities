@@ -104,7 +104,7 @@ public class MCEditSchematic implements Schematic {
                 }
             }
         } catch (IOException | NBTException e) {
-            Handler.handle(e);
+            e.printStackTrace();
         }
     }
 
