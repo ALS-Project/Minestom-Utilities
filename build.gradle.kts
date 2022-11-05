@@ -7,7 +7,7 @@ plugins {
 var minestomVersion = "42195c536b"
 
 group = "fr.bretzel.minestom.utils"
-version = "1.0"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
