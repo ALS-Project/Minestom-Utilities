@@ -1,7 +1,6 @@
 package fr.bretzel.minestom.utils.schematic;
 
 import fr.bretzel.minestom.utils.block.BlockUtils;
-import fr.bretzel.minestom.utils.Handler;
 import fr.bretzel.minestom.utils.file.FileUtils;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
