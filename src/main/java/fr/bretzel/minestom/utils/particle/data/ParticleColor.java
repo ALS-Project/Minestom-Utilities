@@ -1,6 +1,6 @@
 package fr.bretzel.minestom.utils.particle.data;
 
-import fr.als.core.utils.particle.IParticleData;
+import fr.bretzel.minestom.utils.particle.IParticleData;
 import net.minestom.server.color.Color;
 import net.minestom.server.utils.binary.BinaryWriter;
 
