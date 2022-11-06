@@ -286,7 +286,7 @@ public class Location {
         return new Vec(x, y, z);
     }
 
-    public @NotNull Pos asPos() {
+    public @NotNull Pos pos() {
         return new Pos(x, y, z, yaw, pitch);
     }
 
