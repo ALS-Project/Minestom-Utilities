@@ -1,12 +1,13 @@
 package fr.bretzel.minestom.utils.block.shapes;
 
+import fr.bretzel.minestom.states.state.Axis;
+import fr.bretzel.minestom.states.state.Facing;
 import fr.bretzel.minestom.utils.math.Edge;
 import fr.bretzel.minestom.utils.math.MathsUtils;
 import fr.bretzel.minestom.utils.raytrace.OffsetType;
 import fr.bretzel.minestom.utils.raytrace.RayBlockResult;
 import fr.bretzel.minestom.utils.raytrace.RayTraceContext;
-import fr.bretzel.minestom.states.state.Axis;
-import fr.bretzel.minestom.states.state.Facing;
+import net.minestom.server.collision.BoundingBox;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -57,6 +58,10 @@ public class Shape {
         this.edges = shape.edges;
         this.points = shape.points;
         this.offsetType = shape.offsetType;
+    }
+
+    public Shape(BoundingBox boundingBox) {
+        this(boundingBox.minX(), boundingBox.minY(), boundingBox.minZ(), boundingBox.maxX(), boundingBox.maxY(), boundingBox.maxZ());
     }
 
     protected void refreshPointAndEdge() {
