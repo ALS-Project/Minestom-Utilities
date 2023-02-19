@@ -8,12 +8,14 @@ public record RayTraceContext(Instance instance, Vec start, Vec end, Vec directi
                               FluidMode fluidMode) {
 
     public RayTraceContext(Player player, double distance) {
-        this(player.getInstance(), player.getPosition().withY(y -> y + player.getEyeHeight()).asVec(), player.getPosition().withY(y -> y + player.getEyeHeight()).asVec().normalize().mul(distance), player.getPosition().direction(), BlockMode.OUTLINE, FluidMode.ANY);
+        this(player.getInstance(), player.getPosition().withY(y -> y + player.getEyeHeight()).asVec(), player.getPosition().withY(y -> y + player.getEyeHeight()).asVec().normalize().mul(distance), player.getPosition().direction(), BlockMode.SHAPE, FluidMode.ANY);
     }
 
+    public RayTraceContext(Player player, int distance, BlockMode blockMode) {
+        this(player.getInstance(), player.getPosition().withY(y -> y + player.getEyeHeight()).asVec(), player.getPosition().withY(y -> y + player.getEyeHeight()).asVec().normalize().mul(distance), player.getPosition().direction(), blockMode, FluidMode.NONE);
+    }
     public RayTraceContext(Player player, int distance, BlockMode blockMode, FluidMode fluidMode) {
         this(player.getInstance(), player.getPosition().withY(y -> y + player.getEyeHeight()).asVec(), player.getPosition().withY(y -> y + player.getEyeHeight()).asVec().normalize().mul(distance), player.getPosition().direction(), blockMode, fluidMode);
-
     }
 
     public double distance() {
