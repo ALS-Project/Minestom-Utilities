@@ -10,7 +10,7 @@ public class BlockShape {
     public static final BlockShape EMPTY = new BlockShape(new BlockSection[0], Block.AIR);
     private final BlockSection[] blockSections;
     private final Point relativeStart, relativeEnd;
-    private Block block;
+    private final Block block;
 
     public BlockShape(BlockSection[] blockSections, Block block) {
         this.blockSections = blockSections;
@@ -41,6 +41,10 @@ public class BlockShape {
 
     public @NotNull Point relativeEnd() {
         return relativeEnd;
+    }
+
+    public Block block() {
+        return block;
     }
 
     public double minX() {
