@@ -71,6 +71,10 @@ public class BlockShape {
         return relativeEnd().z();
     }
 
+    public boolean noCollision() {
+        return this == EMPTY;
+    }
+
     public BlockSection[] blockSections() {
         return blockSections;
     }

@@ -43,13 +43,7 @@ public class RayTrace {
     public static RayBlockResult rayTraceBlock(RayTraceContext context) {
         return rayBlocks(context, (rayTraceContext, position, block) -> {
             if (rayTraceContext.blockMode() == BlockMode.SHAPE) {
-                var shape = block.registry().collisionShape();
 
-                var isHit = shape.intersectBoxSwept(context.start(), context.direction(), position, new BoundingBox(0.01, 0.01, 0.01), new SweepResult(100, 0, 0, 0));
-
-                if (isHit) {
-                    return new RayBlockResult(position, position, context, Facing.SELF, shape);
-                }
             }
 
             return null;
@@ -124,12 +118,6 @@ public class RayTrace {
                 var block = Block.fromNamespaceId(blockId);
                 Check.notNull(inputStream, "Cannot found block {0} !", blockId);
                 var statesObject = blockObject.getAsJsonObject("states");
-
-                var defaultShape = stringToShape(statesObject.get("shape").getAsString(), block);
-                var collisionShape = stringToShape(statesObject.get("collisionShape").getAsString(), block);
-                var interactionShape = stringToShape(statesObject.get("interactionShape").getAsString(), block);
-                var occlusionShape = stringToShape(statesObject.get("occlusionShape").getAsString(), block);
-                var visualShape = stringToShape(statesObject.get("visualShape").getAsString(), block);
 
                 //No states
                 if (statesObject.keySet().size() == 1) {

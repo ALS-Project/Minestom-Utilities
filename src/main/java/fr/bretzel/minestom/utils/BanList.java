@@ -15,7 +15,7 @@ public class BanList {
     private final Config banned;
 
     public BanList() {
-        banned = new Config("banned");
+        banned = new Config("ban.json");
         banned.setWriteOnUpdate(true);
     }
 
