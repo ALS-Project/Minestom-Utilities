@@ -1,8 +1,6 @@
 package fr.bretzel.minestom.utils.raytrace;
 
-import fr.bretzel.minestom.utils.math.Edge;
 import fr.bretzel.minestom.utils.particle.IParticleData;
-import fr.bretzel.minestom.utils.raytrace.shapes.BlockShape;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -69,14 +67,14 @@ public class RayUtils {
                 drawEdge(edge, offset, player, translated);*/
     }
 
-    public static void drawEdge(Edge edge, Vec offset, Player player, Pos translated) {
+    /*public static void drawEdge(Edge edge, Vec offset, Player player, Pos translated) {
         edge.getLines(0.15).forEach(position -> player.getPlayerConnection().sendPacket(getPacket(position.add(offset), translated, binaryWriter -> {
             binaryWriter.writeFloat((float) 0 / 255);//R
             binaryWriter.writeFloat((float) 0 / 255);//G
             binaryWriter.writeFloat((float) 255 / 255);//B
             binaryWriter.writeFloat(0.1F);//Size
         })));
-    }
+    }*/
 
 
     private static ParticlePacket getPacket(Point position, Point translated, Consumer<BinaryWriter> writerConsumer) {

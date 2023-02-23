@@ -3,7 +3,7 @@ package fr.bretzel.minestom.utils.instance.biomes;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import fr.bretzel.minestom.utils.file.FileUtils;
+import fr.bretzel.minestom.utils.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;

@@ -2,7 +2,7 @@ package fr.bretzel.minestom.utils.config.entry;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import fr.als.core.instance.ALSInstanceManager;
+import fr.bretzel.minestom.utils.instance.InstanceManager;
 import fr.bretzel.minestom.utils.math.Location;
 
 public class LocationEntry extends Entry<Location> {
@@ -25,7 +25,7 @@ public class LocationEntry extends Entry<Location> {
         var yaw = object.get("yaw").getAsFloat();
         var pitch = object.get("pitch").getAsFloat();
 
-        var instance = ALSInstanceManager.getInstance(object.get("world").getAsString());
+        var instance = InstanceManager.getInstance(object.get("world").getAsString());
 
         return new Location(instance, x, y, z, yaw, pitch);
     }

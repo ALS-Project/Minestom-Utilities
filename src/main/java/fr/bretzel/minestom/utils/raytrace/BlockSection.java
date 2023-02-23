@@ -1,4 +1,4 @@
-package fr.bretzel.minestom.utils.raytrace.shapes;
+package fr.bretzel.minestom.utils.raytrace;
 
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Vec;

@@ -1,4 +1,4 @@
-package fr.bretzel.minestom.utils.raytrace.shapes;
+package fr.bretzel.minestom.utils.raytrace;
 
 public enum RenderShape {
     INVISIBLE,

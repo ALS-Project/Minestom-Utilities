@@ -1,8 +1,9 @@
-package fr.bretzel.minestom.utils.raytrace.shapes;
+package fr.bretzel.minestom.utils.raytrace;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import net.minestom.server.coordinate.Point;
+import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.instance.block.Block;
 import org.jetbrains.annotations.NotNull;
@@ -11,18 +12,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class BlockShape {
+public class BlockShape implements IRayTrace {
     private static final Pattern PATTERN = Pattern.compile("\\d.\\d{1,3}", Pattern.MULTILINE);
-    public static final BlockShape EMPTY = new BlockShape(new BlockSection[0], Block.AIR);
+    public static final BlockShape EMPTY = new BlockShape(new BlockSection[0], Block.AIR, OffsetType.NONE);
     private final BlockSection[] blockSections;
     private final Point relativeStart, relativeEnd;
     private final Block block;
     private final OffsetType offsetType;
 
-    public BlockShape(BlockSection[] blockSections, Block block) {
+    public BlockShape(BlockSection[] blockSections, Block block, OffsetType offsetType) {
         this.blockSections = blockSections;
         this.block = block;
-        this.offsetType = OffsetType.NONE;
+        this.offsetType = offsetType;
 
         // Find bounds
         {
@@ -46,7 +47,6 @@ public class BlockShape {
     public static BlockShape of(String aabbString, Block block, OffsetType offsetType) {
         if (aabbString == null || aabbString.isEmpty() || aabbString.equals("[]"))
             return BlockShape.EMPTY;
-
 
         final Matcher matcher = PATTERN.matcher(aabbString);
         DoubleList vars = new DoubleArrayList();
@@ -76,7 +76,7 @@ public class BlockShape {
             blockSections[i] = bs;
         }
 
-        return new BlockShape(blockSections, block);
+        return new BlockShape(blockSections, block, offsetType);
     }
 
     public @NotNull Point relativeStart() {
@@ -125,5 +125,11 @@ public class BlockShape {
 
     public BlockSection[] blockSections() {
         return blockSections;
+    }
+
+    @Override
+    public RayBlockResult rayTraceBlock(RayTraceContext context, Pos blockPosition, Vec offset) {
+        //TODO: Implement rayTraceBlock with a support of offset and custom hitbox size
+        return null;
     }
 }
