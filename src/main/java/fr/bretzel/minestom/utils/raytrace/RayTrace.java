@@ -47,6 +47,9 @@ public class RayTrace {
     }
 
     protected static <T> T rayBlocks(RayTraceContext context, TriFunction<RayTraceContext, Point, Block, T> rayTrace, BiFunction<RayTraceContext, Point, T> miss) {
+        if(!isInit)
+            throw new IllegalStateException("RayTrace is not initialized");
+
         var start = context.start();
         var end = context.end();
 

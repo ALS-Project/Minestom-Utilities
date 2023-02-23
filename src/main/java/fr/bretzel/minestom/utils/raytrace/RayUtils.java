@@ -2,8 +2,7 @@ package fr.bretzel.minestom.utils.raytrace;
 
 import fr.bretzel.minestom.utils.math.Edge;
 import fr.bretzel.minestom.utils.particle.IParticleData;
-import fr.bretzel.minestom.utils.particle.ParticleUtils;
-import fr.bretzel.minestom.utils.raytrace.shapes.OffsetType;
+import fr.bretzel.minestom.utils.raytrace.shapes.BlockShape;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -18,22 +17,24 @@ import java.util.function.Consumer;
 
 public class RayUtils {
 
+    //TODO: Add a way to draw a a BlockShape with a custom particle and color
+
     public static void drawHitBox(BlockShape blockShape, Point translated, Instance instance, Particle particle, IParticleData data) {
         instance.getPlayers().forEach(player -> drawHitBox(blockShape, translated, player, particle, data));
     }
 
     public static void drawHitBox(BlockShape boundingBlockBox, Point translated, Player player, Particle particle, IParticleData data) {
-        if (boundingBlockBox instanceof MultiBlockShape multiBlockShape)
+        /*if (boundingBlockBox instanceof MultiBlockShape multiBlockShape)
             multiBlockShape.getShapes().forEach(shape -> drawHitBox(shape, translated, player, particle, data));
         else {
             for (Vec point : boundingBlockBox.getPoints()) {
                 ParticleUtils.spawnParticle(player, particle, translated.add(point), data);
             }
-        }
+        }*/
     }
 
     public static void drawRayBlock(RayBlockResult result, Player player, boolean edge) {
-        result.lines(0.1, result.getContext().start().distance(result.getHit()),
+        /*result.lines(0.1, result.getContext().start().distance(result.getHit()),
                 vec -> player.getPlayerConnection().sendPacket(getPacket(vec,
                         Pos.ZERO, binaryWriter -> {
                             binaryWriter.writeFloat((float) 0 / 255);//R
@@ -49,11 +50,11 @@ public class RayUtils {
             binaryWriter.writeFloat(0.22F);//Size
         }));
 
-        drawHitBox(result.getHitShape(), player, result.getBlockPosition(), edge);
+        drawHitBox(result.getHitShape(), player, result.getBlockPosition(), edge);*/
     }
 
     public static void drawHitBox(BlockShape blockShape, Player player, Pos translated, boolean drawEdge) {
-        Vec offset = blockShape.getOffsetType() == OffsetType.NONE ? new Vec(0, 0, 0) : RayTrace.getOffset(translated, blockShape.getOffsetType());
+        /*Vec offset = blockShape.offsetType() == OffsetType.NONE ? new Vec(0, 0, 0) : RayTrace.getOffset(translated, blockShape.getOffsetType());
 
         for (Vec pos : blockShape.getPoints())
             player.getPlayerConnection().sendPacket(getPacket(pos.add(offset), translated, binaryWriter -> {
@@ -65,7 +66,7 @@ public class RayUtils {
 
         if (drawEdge)
             for (Edge edge : blockShape.getEdges())
-                drawEdge(edge, offset, player, translated);
+                drawEdge(edge, offset, player, translated);*/
     }
 
     public static void drawEdge(Edge edge, Vec offset, Player player, Pos translated) {
@@ -77,10 +78,6 @@ public class RayUtils {
         })));
     }
 
-    public static BlockShape getCorrectBox(Pos newPos, Player player) {
-        return new BlockShape(newPos.x() - (0.6 / 2), (newPos.y() - (1.8 / 2)) + 1, newPos.z() - (0.6 / 2),
-                newPos.x() + (0.6 / 2), (newPos.y() + ((player.isSneaking() ? 1.3 : 1.8) / 2)) + 1, newPos.z() + (0.6 / 2));
-    }
 
     private static ParticlePacket getPacket(Point position, Point translated, Consumer<BinaryWriter> writerConsumer) {
         if (writerConsumer == null)

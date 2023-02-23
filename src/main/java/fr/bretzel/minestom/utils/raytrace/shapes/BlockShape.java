@@ -17,10 +17,12 @@ public class BlockShape {
     private final BlockSection[] blockSections;
     private final Point relativeStart, relativeEnd;
     private final Block block;
+    private final OffsetType offsetType;
 
     public BlockShape(BlockSection[] blockSections, Block block) {
         this.blockSections = blockSections;
         this.block = block;
+        this.offsetType = OffsetType.NONE;
 
         // Find bounds
         {
@@ -41,7 +43,7 @@ public class BlockShape {
         }
     }
 
-    public static BlockShape of(String aabbString, Block block) {
+    public static BlockShape of(String aabbString, Block block, OffsetType offsetType) {
         if (aabbString == null || aabbString.isEmpty() || aabbString.equals("[]"))
             return BlockShape.EMPTY;
 
@@ -115,6 +117,10 @@ public class BlockShape {
 
     public boolean noCollision() {
         return this == EMPTY;
+    }
+
+    public OffsetType offsetType() {
+        return offsetType;
     }
 
     public BlockSection[] blockSections() {
