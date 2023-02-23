@@ -21,4 +21,7 @@ dependencies {
 
     //ALS Lib
     implementation("com.github.ALS-Project:Minestom-States:$blockStatesVersion")
+
+    //Compression
+    implementation("com.github.luben:zstd-jni:1.4.5-1");
 }

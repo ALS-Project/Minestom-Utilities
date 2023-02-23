@@ -1,7 +1,8 @@
 package fr.bretzel.minestom.utils.raytrace;
 
 public enum BlockMode {
-    SHAPE,
+    OUTLINE,
     VISUAL,
-    COLLISION
+    COLLISION,
+    INTERACTION
 }

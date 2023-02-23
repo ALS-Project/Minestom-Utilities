@@ -3,6 +3,7 @@ package fr.bretzel.minestom.utils.raytrace;
 import fr.bretzel.minestom.utils.math.Edge;
 import fr.bretzel.minestom.utils.particle.IParticleData;
 import fr.bretzel.minestom.utils.particle.ParticleUtils;
+import fr.bretzel.minestom.utils.raytrace.shapes.OffsetType;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;

@@ -1,4 +1,4 @@
-package fr.bretzel.minestom.utils.raytrace;
+package fr.bretzel.minestom.utils.raytrace.shapes;
 
 public enum OffsetType {
     NONE,
