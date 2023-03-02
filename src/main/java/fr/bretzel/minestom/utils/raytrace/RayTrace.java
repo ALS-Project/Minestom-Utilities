@@ -6,8 +6,10 @@ import fr.bretzel.minestom.utils.TriFunction;
 import fr.bretzel.minestom.utils.math.MathsUtils;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
+import net.minestom.server.collision.BoundingBox;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.coordinate.Vec;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.block.BlockIterator;
 import net.minestom.server.utils.validate.Check;
@@ -17,6 +19,7 @@ import java.io.InputStreamReader;
 import java.util.function.BiFunction;
 
 public class RayTrace {
+    public static BoundingBox ZERO = new BoundingBox(0, 0, 0);
     private static final Short2ObjectMap<MultiBlockShape> blockToShape = new Short2ObjectOpenHashMap<>();
     private static final boolean isInit = false;
 
@@ -24,7 +27,9 @@ public class RayTrace {
         if (isInit)
             return;
 
-        parseBlockFile();
+        parseBlocksFile();
+
+        printInfo();
     }
 
     public static RayBlockResult rayTraceBlock(RayTraceContext context) {
@@ -47,7 +52,7 @@ public class RayTrace {
         if (start.samePoint(end))
             return miss.apply(context, start);
 
-        var blockIterator = new BlockIterator(start, context.direction(), 0, MathsUtils.floor(context.distance()));
+        var blockIterator = new BlockIterator(Vec.fromPoint(start), context.direction(), 0, MathsUtils.floor(context.distance()));
         var instance = context.instance();
 
         var lastCheck = Pos.ZERO;
@@ -81,7 +86,7 @@ public class RayTrace {
         return miss.apply(context, lastCheck);
     }
 
-    private static void parseBlockFile() {
+    private static void parseBlocksFile() {
         try (InputStream inputStream = new ZstdInputStream(RayTrace.class.getResourceAsStream("data/blocks.json.zst"))) {
             Check.notNull(inputStream, "Resource {0} does not exist!", "data/blocks.json.zst");
             var jsonElement = JsonParser.parseReader(new InputStreamReader(inputStream));
@@ -106,5 +111,15 @@ public class RayTrace {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static void printInfo() {
+        blockToShape.forEach((aShort, multiBlockShape) -> {
+            System.out.println("Block: " + multiBlockShape.block().name() + " - " + multiBlockShape.block().stateId());
+            System.out.println("Shape: " + multiBlockShape.shape());
+            System.out.println("VisualShape: " + multiBlockShape.visualShape());
+            System.out.println("CollisionShape: " + multiBlockShape.collisionShape());
+            System.out.println("InteractionShape: " + multiBlockShape.interactionShape());
+        });
     }
 }

@@ -3,27 +3,29 @@ package fr.bretzel.minestom.utils.raytrace;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import net.minestom.server.coordinate.Point;
-import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.instance.block.Block;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class BlockShape implements IRayTrace {
+public class BlockShape extends IRayTrace {
     private static final Pattern PATTERN = Pattern.compile("\\d.\\d{1,3}", Pattern.MULTILINE);
-    public static final BlockShape EMPTY = new BlockShape(new BlockSection[0], Block.AIR, OffsetType.NONE);
+    public static final BlockShape EMPTY = new BlockShape(new BlockSection[0], Block.AIR, OffsetType.NONE, RenderType.MODEL);
     private final BlockSection[] blockSections;
     private final Point relativeStart, relativeEnd;
     private final Block block;
     private final OffsetType offsetType;
+    private final RenderType renderType;
 
-    public BlockShape(BlockSection[] blockSections, Block block, OffsetType offsetType) {
+    public BlockShape(BlockSection[] blockSections, Block block, OffsetType offsetType, RenderType renderType) {
         this.blockSections = blockSections;
         this.block = block;
         this.offsetType = offsetType;
+        this.renderType = renderType;
 
         // Find bounds
         {
@@ -44,7 +46,7 @@ public class BlockShape implements IRayTrace {
         }
     }
 
-    public static BlockShape of(String aabbString, Block block, OffsetType offsetType) {
+    public static BlockShape of(String aabbString, Block block, OffsetType offsetType, RenderType renderType) {
         if (aabbString == null || aabbString.isEmpty() || aabbString.equals("[]"))
             return BlockShape.EMPTY;
 
@@ -59,6 +61,7 @@ public class BlockShape implements IRayTrace {
         final int count = vars.size() / 6;
 
         BlockSection[] blockSections = new BlockSection[count];
+        BlockShape shape = new BlockShape(blockSections, block, offsetType, renderType);
 
         for (int i = 0; i < count; ++i) {
             final double minX = vars.getDouble(6 * i);
@@ -69,14 +72,14 @@ public class BlockShape implements IRayTrace {
             final double boundYSize = vars.getDouble(4 + 6 * i) - minY;
             final double boundZSize = vars.getDouble(5 + 6 * i) - minZ;
 
-            final BlockSection bs = new BlockSection(boundXSize, boundYSize, boundZSize);
+            final BlockSection bs = new BlockSection(boundXSize, boundYSize, boundZSize, shape);
             assert bs.minX() == minX;
             assert bs.minY() == minY;
             assert bs.minZ() == minZ;
             blockSections[i] = bs;
         }
 
-        return new BlockShape(blockSections, block, offsetType);
+        return shape;
     }
 
     public @NotNull Point relativeStart() {
@@ -123,13 +126,40 @@ public class BlockShape implements IRayTrace {
         return offsetType;
     }
 
+    public RenderType renderType() {
+        return renderType;
+    }
+
     public BlockSection[] blockSections() {
         return blockSections;
     }
 
     @Override
-    public RayBlockResult rayTraceBlock(RayTraceContext context, Pos blockPosition, Vec offset) {
-        //TODO: Implement rayTraceBlock with a support of offset and custom hitbox size
-        return null;
+    public String toString() {
+        return "BlockShape{" +
+                "blockSections=" + Arrays.toString(blockSections) +
+                ", relativeStart=" + relativeStart +
+                ", relativeEnd=" + relativeEnd +
+                ", block=" + block +
+                ", offsetType=" + offsetType +
+                ", renderType=" + renderType +
+                '}';
+    }
+
+    @Override
+    RayBlockResult rayTraceBlock(RayTraceContext context, Point blockPosition, Point offset) {
+        //No collision
+        if (noCollision())
+            return null;
+
+        RayBlockResult result = null;
+
+        for (BlockSection blockSection : blockSections) {
+            RayBlockResult blockResult = blockSection.rayTraceBlock(context, blockPosition, offset);
+            if (blockResult != null)
+                result = blockResult;
+        }
+
+        return result;
     }
 }

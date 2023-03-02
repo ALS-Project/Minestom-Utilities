@@ -1,6 +1,6 @@
 package fr.bretzel.minestom.utils.raytrace;
 
-public enum RenderShape {
+public enum RenderType {
     INVISIBLE,
     BLOCK_ENTITY,
     MODEL;

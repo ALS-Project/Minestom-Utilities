@@ -10,10 +10,11 @@ public record MultiBlockShape(BlockShape shape, BlockShape visualShape, BlockSha
         var stateId = state.get("stateId").getAsShort();
         var block = Block.fromStateId(stateId);
         var offsetType = OffsetType.valueOf(state.get("offsetType").getAsString());
-        var shape = BlockShape.of(state.get("shape").getAsString(), block, offsetType);
-        var collisionShape = BlockShape.of(state.get("collisionShape").getAsString(), block, offsetType);
-        var interactionShape = BlockShape.of(state.get("interactionShape").getAsString(), block, offsetType);
-        var visualShape = BlockShape.of(state.get("visualShape").getAsString(), block, offsetType);
+        var renderType = RenderType.valueOf(state.get("renderShape").getAsString());
+        var shape = BlockShape.of(state.get("shape").getAsString(), block, offsetType, renderType);
+        var collisionShape = BlockShape.of(state.get("collisionShape").getAsString(), block, offsetType, renderType);
+        var interactionShape = BlockShape.of(state.get("interactionShape").getAsString(), block, offsetType, renderType);
+        var visualShape = BlockShape.of(state.get("visualShape").getAsString(), block, offsetType, renderType);
         return new MultiBlockShape(shape, visualShape, collisionShape, interactionShape, block);
     }
 
@@ -24,5 +25,16 @@ public record MultiBlockShape(BlockShape shape, BlockShape visualShape, BlockSha
             case COLLISION -> collisionShape;
             default -> shape;
         };
+    }
+
+    @Override
+    public String toString() {
+        return "MultiBlockShape{" +
+                "shape=" + shape +
+                ", visualShape=" + visualShape +
+                ", collisionShape=" + collisionShape +
+                ", interactionShape=" + interactionShape +
+                ", block=" + block +
+                '}';
     }
 }
