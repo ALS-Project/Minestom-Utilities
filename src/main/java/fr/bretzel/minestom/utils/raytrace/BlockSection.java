@@ -248,7 +248,6 @@ public class BlockSection extends IRayTrace {
                     tzMax = (maxZ - startZ) * divZ;
                     hitBlockFaceZMin = BlockFace.NORTH;
                     hitBlockFaceZMax = BlockFace.SOUTH;
-                    percentage = zFac;
                 }
             }
         } else {
@@ -267,7 +266,6 @@ public class BlockSection extends IRayTrace {
                     tzMax = (minZ - startZ) * divZ;
                     hitBlockFaceZMin = BlockFace.SOUTH;
                     hitBlockFaceZMax = BlockFace.NORTH;
-                    percentage = zFac;
                 }
             }
         }
@@ -293,7 +291,9 @@ public class BlockSection extends IRayTrace {
         }
 
         double t;
+
         BlockFace hitBlockFace;
+
         if (tMin < 0.0D) {
             t = tMax;
             hitBlockFace = hitBlockFaceMax;
@@ -301,6 +301,7 @@ public class BlockSection extends IRayTrace {
             t = tMin;
             hitBlockFace = hitBlockFaceMin;
         }
+
         // reusing the newly created direction vector for the hit position:
         Vec hitPosition = rayDirection.mul(t).add(rayStart);
         return new RayBlockResult(hitPosition, context, hitBlockFace, parent());

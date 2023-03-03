@@ -14,6 +14,7 @@ import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.block.BlockIterator;
 import net.minestom.server.utils.validate.Check;
 
+import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.function.BiFunction;
@@ -89,7 +90,7 @@ public class RayTrace {
     private static void parseBlocksFile() {
         try (InputStream inputStream = new ZstdInputStream(RayTrace.class.getResourceAsStream("data/blocks.json.zst"))) {
             Check.notNull(inputStream, "Resource {0} does not exist!", "data/blocks.json.zst");
-            var jsonElement = JsonParser.parseReader(new InputStreamReader(inputStream));
+            var jsonElement = JsonParser.parseReader(new BufferedReader(new InputStreamReader(inputStream)));
             var mainObject = jsonElement.getAsJsonObject();
 
             for (String blockId : mainObject.keySet()) {
