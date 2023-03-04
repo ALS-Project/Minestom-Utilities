@@ -90,7 +90,7 @@ public class RayTrace {
     }
 
     private static void parseBlocksFile() {
-        try (var inputStream = RayTrace.class.getResourceAsStream("data/blocks.json.zst")) {
+        try (var inputStream = RayTrace.class.getResourceAsStream("/data/blocks.json.zst")) {
             Check.notNull(inputStream, "Resource {0} does not exist!", "data/blocks.json.zst");
 
             byte[] compressed = inputStream.readAllBytes();
