@@ -10,19 +10,17 @@ public class BlockSection extends IRayTrace {
     private final double width, height, depth;
     private final Point offset;
     private Point relativeEnd;
+    private BlockShape parent;
 
-    private final BlockShape parent;
-
-    public BlockSection(double width, double height, double depth, Vec offset, BlockShape parent) {
+    public BlockSection(double width, double height, double depth, Vec offset) {
         this.width = width;
         this.height = height;
         this.depth = depth;
         this.offset = offset;
-        this.parent = parent;
     }
 
-    public BlockSection(double width, double height, double depth, BlockShape parent) {
-        this(width, height, depth, new Vec(-width / 2, 0, -depth / 2), parent);
+    public BlockSection(double width, double height, double depth) {
+        this(width, height, depth, new Vec(-width / 2, 0, -depth / 2));
     }
 
     public @NotNull Point relativeStart() {
@@ -69,6 +67,13 @@ public class BlockSection extends IRayTrace {
 
     public double maxZ() {
         return relativeEnd().z();
+    }
+
+    public void setParent(BlockShape parent) {
+        if (this.parent != null)
+            throw new IllegalStateException("You cannot change the parent of a BlockSection");
+
+        this.parent = parent;
     }
 
     public BlockShape parent() {

@@ -32,6 +32,7 @@ public class BlockShape extends IRayTrace {
             double minX = 1, minY = 1, minZ = 1;
             double maxX = 0, maxY = 0, maxZ = 0;
             for (BlockSection blockSection : blockSections) {
+                blockSection.setParent(this);
                 // Min
                 if (blockSection.minX() < minX) minX = blockSection.minX();
                 if (blockSection.minY() < minY) minY = blockSection.minY();
@@ -61,7 +62,6 @@ public class BlockShape extends IRayTrace {
         final int count = vars.size() / 6;
 
         BlockSection[] blockSections = new BlockSection[count];
-        BlockShape shape = new BlockShape(blockSections, block, offsetType, renderType);
 
         for (int i = 0; i < count; ++i) {
             final double minX = vars.getDouble(6 * i);
@@ -72,14 +72,16 @@ public class BlockShape extends IRayTrace {
             final double boundYSize = vars.getDouble(4 + 6 * i) - minY;
             final double boundZSize = vars.getDouble(5 + 6 * i) - minZ;
 
-            final BlockSection bs = new BlockSection(boundXSize, boundYSize, boundZSize, shape);
+            final BlockSection bs = new BlockSection(boundXSize, boundYSize, boundZSize);
+
             assert bs.minX() == minX;
             assert bs.minY() == minY;
             assert bs.minZ() == minZ;
+
             blockSections[i] = bs;
         }
 
-        return shape;
+        return new BlockShape(blockSections, block, offsetType, renderType);
     }
 
     public @NotNull Point relativeStart() {
