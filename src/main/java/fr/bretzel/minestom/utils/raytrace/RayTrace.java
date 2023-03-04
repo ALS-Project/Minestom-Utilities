@@ -1,6 +1,6 @@
 package fr.bretzel.minestom.utils.raytrace;
 
-import com.github.luben.zstd.ZstdInputStream;
+import com.github.luben.zstd.Zstd;
 import com.google.gson.JsonParser;
 import fr.bretzel.minestom.utils.TriFunction;
 import fr.bretzel.minestom.utils.math.MathsUtils;
@@ -15,7 +15,7 @@ import net.minestom.server.utils.block.BlockIterator;
 import net.minestom.server.utils.validate.Check;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -90,9 +90,17 @@ public class RayTrace {
     }
 
     private static void parseBlocksFile() {
-        try (InputStream inputStream = new ZstdInputStream(RayTrace.class.getResourceAsStream("data/blocks.json.zst"))) {
+        try (var inputStream = RayTrace.class.getResourceAsStream("data/blocks.json.zst")) {
             Check.notNull(inputStream, "Resource {0} does not exist!", "data/blocks.json.zst");
-            Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+
+            byte[] compressed = inputStream.readAllBytes();
+
+            inputStream.close();
+
+            var originalSize = Zstd.decompressedSize(compressed);
+            byte[] decompressed = Zstd.decompress(compressed, (int) originalSize);
+
+            Reader reader = new InputStreamReader(new ByteArrayInputStream(decompressed), StandardCharsets.UTF_8);
             var jsonElement = JsonParser.parseReader(new BufferedReader(reader));
             var mainObject = jsonElement.getAsJsonObject();
 
