@@ -13,6 +13,7 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.instance.block.BlockFace;
+import net.minestom.server.utils.MathUtils;
 import net.minestom.server.utils.NamespaceID;
 import net.minestom.server.utils.block.BlockIterator;
 import net.minestom.server.utils.validate.Check;
@@ -88,8 +89,11 @@ public class RayTrace {
             if (block.isAir())
                 continue;
 
+            var startTime = System.nanoTime();
             //RayTrace, null == no collision
             var result = rayTrace.apply(context, lastCheck = Pos.fromPoint(position), block);
+            final double loadTime = MathUtils.round((System.nanoTime() - startTime) / 1_000_000D, 3);
+            System.out.println("RayTrace: " + loadTime + "ms");
 
             //Found a hit
             if (result != null)
