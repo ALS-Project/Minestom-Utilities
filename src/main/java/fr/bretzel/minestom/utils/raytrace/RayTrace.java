@@ -12,6 +12,7 @@ import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.instance.block.Block;
+import net.minestom.server.instance.block.BlockFace;
 import net.minestom.server.utils.NamespaceID;
 import net.minestom.server.utils.block.BlockIterator;
 import net.minestom.server.utils.validate.Check;
@@ -27,6 +28,9 @@ import java.util.function.BiFunction;
 
 public class RayTrace {
     public static BoundingBox ZERO = new BoundingBox(0, 0, 0);
+
+    public static final MultiBlockShape EMPTY = new MultiBlockShape(BlockShape.EMPTY, BlockShape.EMPTY, BlockShape.EMPTY, BlockShape.EMPTY, Block.AIR.stateId(), Block.AIR, Block.AIR.namespace());
+
     private static final Short2ObjectMap<MultiBlockShape> blockToShape = new Short2ObjectOpenHashMap<>();
     private static boolean isInit = false;
 
@@ -48,7 +52,7 @@ public class RayTrace {
             var offset = shape.offsetType().operator().apply(position);
             return shape.rayTraceBlock(rayTraceContext, position, offset);
 
-        }, (context1, position) -> new RayBlockResult(position, context1, null, null));
+        }, (context1, position) -> new RayBlockResult(position, context1, BlockFace.BOTTOM, BlockShape.EMPTY));
     }
 
     protected static <T> T rayBlocks(RayTraceContext context, TriFunction<RayTraceContext, Pos, Block, T> rayTrace, BiFunction<RayTraceContext, Point, T> miss) {
