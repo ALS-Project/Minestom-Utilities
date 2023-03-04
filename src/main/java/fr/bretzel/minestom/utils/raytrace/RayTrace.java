@@ -28,7 +28,7 @@ import java.util.function.BiFunction;
 public class RayTrace {
     public static BoundingBox ZERO = new BoundingBox(0, 0, 0);
     private static final Short2ObjectMap<MultiBlockShape> blockToShape = new Short2ObjectOpenHashMap<>();
-    private static final boolean isInit = false;
+    private static boolean isInit = false;
 
     public static void init() {
         if (isInit)
@@ -36,6 +36,8 @@ public class RayTrace {
 
         parseBlocksFile();
         assertBlockShapes();
+
+        isInit = true;
         //printInfo();
     }
 
