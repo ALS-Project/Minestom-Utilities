@@ -13,7 +13,6 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.instance.block.BlockFace;
-import net.minestom.server.utils.MathUtils;
 import net.minestom.server.utils.NamespaceID;
 import net.minestom.server.utils.block.BlockIterator;
 import net.minestom.server.utils.validate.Check;
@@ -66,34 +65,40 @@ public class RayTrace {
         if (start.samePoint(end))
             return miss.apply(context, start);
 
-        var blockIterator = new BlockIterator(Vec.fromPoint(start), context.direction(), 0, MathsUtils.floor(context.distance()));
+        var blockIterator = new BlockIterator(Vec.fromPoint(start), context.direction(), 0, MathsUtils.floor(context.distance()), true);
+
         var instance = context.instance();
 
         var lastCheck = Pos.ZERO;
 
-        while (blockIterator.hasNext()) {
-            var position = blockIterator.next();
+        var lastChunkCkeck = instance.getChunkAt(start);
 
-            //If chunk is not loaded
-            if (!instance.isChunkLoaded(position))
-                break;
+        while (blockIterator.hasNext()) {
+
+            var position = blockIterator.next();
+            var chunkX = position.chunkX();
+            var chunkZ = position.chunkZ();
+
+            if (lastChunkCkeck == null || (lastChunkCkeck.getChunkX() != chunkX || lastChunkCkeck.getChunkZ() != chunkZ)) {
+                lastChunkCkeck = instance.getChunkAt(position);
+
+                if (lastChunkCkeck == null)
+                    break;
+            }
 
             //If chunk is in void
             if (instance.isInVoid(position))
                 break;
 
             //Get the Block
-            var block = instance.getBlock(position);
+            var block = lastChunkCkeck.getBlock(position, Block.Getter.Condition.TYPE);
 
             //Skip air block
             if (block.isAir())
                 continue;
 
-            var startTime = System.nanoTime();
             //RayTrace, null == no collision
             var result = rayTrace.apply(context, lastCheck = Pos.fromPoint(position), block);
-            final double loadTime = MathUtils.round((System.nanoTime() - startTime) / 1_000_000D, 3);
-            System.out.println("RayTrace: " + loadTime + "ms");
 
             //Found a hit
             if (result != null)
