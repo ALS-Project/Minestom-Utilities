@@ -20,6 +20,10 @@ public record MultiBlockShape(BlockShape shape, BlockShape visualShape, BlockSha
 
         var offsetType = OffsetType.valueOf(state.get("offsetType").getAsString());
         var renderType = RenderType.fromString(state.get("renderShape").getAsString());
+
+        if (renderType == RenderType.BLOCK_ENTITY)
+            System.out.println("Block entity render detected: " + id);
+
         var shape = BlockShape.of(state.get("shape").getAsString(), block, offsetType, renderType);
         var collisionShape = BlockShape.of(state.get("collisionShape").getAsString(), block, offsetType, renderType);
         var interactionShape = BlockShape.of(state.get("interactionShape").getAsString(), block, offsetType, renderType);

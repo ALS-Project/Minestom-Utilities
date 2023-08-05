@@ -1,87 +1,75 @@
 package fr.bretzel.minestom.utils.raytrace;
 
-import fr.bretzel.minestom.utils.particle.IParticleData;
+import fr.bretzel.minestom.utils.particle.ParticleUtils;
+import fr.bretzel.minestom.utils.particle.data.ParticleColor;
+import net.minestom.server.color.Color;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Player;
-import net.minestom.server.instance.Instance;
-import net.minestom.server.network.packet.server.play.ParticlePacket;
 import net.minestom.server.particle.Particle;
-import net.minestom.server.particle.ParticleCreator;
-import net.minestom.server.utils.binary.BinaryWriter;
-
-import java.util.function.Consumer;
 
 public class RayUtils {
 
-    //TODO: Add a way to draw a a BlockShape with a custom particle and color
-
-    public static void drawHitBox(BlockShape blockShape, Point translated, Instance instance, Particle particle, IParticleData data) {
-        instance.getPlayers().forEach(player -> drawHitBox(blockShape, translated, player, particle, data));
+    public static void drawBlockShape(Pos blockPosition, BlockShape shape, Player... players) {
+        for (BlockSection section : shape.blockSections()) {
+            drawBlockSection(blockPosition, section, players);
+        }
     }
 
-    public static void drawHitBox(BlockShape boundingBlockBox, Point translated, Player player, Particle particle, IParticleData data) {
-        /*if (boundingBlockBox instanceof MultiBlockShape multiBlockShape)
-            multiBlockShape.getShapes().forEach(shape -> drawHitBox(shape, translated, player, particle, data));
-        else {
-            for (Vec point : boundingBlockBox.getPoints()) {
-                ParticleUtils.spawnParticle(player, particle, translated.add(point), data);
+    public static void drawBlockSection(Pos blockPosition, BlockSection section, Player... players) {
+        var shape = section.parent();
+
+        if (shape.offsetType() != OffsetType.NONE)
+            blockPosition = blockPosition.add(shape.offsetType().operator().apply(blockPosition));
+
+        var minx = blockPosition.x() + section.minX();
+        var miny = blockPosition.y() + section.minY();
+        var minz = blockPosition.z() + section.minZ();
+
+        var maxx = blockPosition.x() + section.maxX();
+        var maxy = blockPosition.y() + section.maxY();
+        var maxz = blockPosition.z() + section.maxZ();
+
+        for (Player player : players) {
+            ParticleUtils.spawnParticle(player, Particle.DUST, new Pos(minx, miny, minz), new ParticleColor(new Color(100, 100, 255)));
+            ParticleUtils.spawnParticle(player, Particle.DUST, new Pos(minx, miny, maxz), new ParticleColor(new Color(100, 100, 255)));
+            ParticleUtils.spawnParticle(player, Particle.DUST, new Pos(maxx, miny, maxz), new ParticleColor(new Color(100, 100, 255)));
+            ParticleUtils.spawnParticle(player, Particle.DUST, new Pos(maxx, miny, minz), new ParticleColor(new Color(100, 100, 255)));
+
+            ParticleUtils.spawnParticle(player, Particle.DUST, new Pos(minx, maxy, minz), new ParticleColor(new Color(100, 100, 255)));
+            ParticleUtils.spawnParticle(player, Particle.DUST, new Pos(minx, maxy, maxz), new ParticleColor(new Color(100, 100, 255)));
+            ParticleUtils.spawnParticle(player, Particle.DUST, new Pos(maxx, maxy, maxz), new ParticleColor(new Color(100, 100, 255)));
+            ParticleUtils.spawnParticle(player, Particle.DUST, new Pos(maxx, maxy, minz), new ParticleColor(new Color(100, 100, 255)));
+
+            drawLine(new Pos(minx, miny, minz), new Pos(minx, miny, maxz), player);
+            drawLine(new Pos(minx, miny, maxz), new Pos(maxx, miny, maxz), player);
+            drawLine(new Pos(maxx, miny, maxz), new Pos(maxx, miny, minz), player);
+            drawLine(new Pos(maxx, miny, minz), new Pos(minx, miny, minz), player);
+
+            drawLine(new Pos(minx, maxy, minz), new Pos(minx, maxy, maxz), player);
+            drawLine(new Pos(minx, maxy, maxz), new Pos(maxx, maxy, maxz), player);
+            drawLine(new Pos(maxx, maxy, maxz), new Pos(maxx, maxy, minz), player);
+            drawLine(new Pos(maxx, maxy, minz), new Pos(minx, maxy, minz), player);
+
+            drawLine(new Pos(minx, miny, minz), new Pos(minx, maxy, minz), player);
+            drawLine(new Pos(minx, miny, maxz), new Pos(minx, maxy, maxz), player);
+            drawLine(new Pos(maxx, miny, maxz), new Pos(maxx, maxy, maxz), player);
+            drawLine(new Pos(maxx, miny, minz), new Pos(maxx, maxy, minz), player);
+
+        }
+    }
+
+    public static void drawLine(Point from, Point to, Player... players) {
+        var dir = new Vec(to.x() - from.x(), to.y() - from.y(), to.z() - from.z()).normalize().div(10);
+        double d = from.distance(to) / 16;
+
+
+        for (int i = 0; i < 16; i++) {
+            var pos = from.add(dir.mul(i * d));
+            for (Player player : players) {
+                ParticleUtils.spawnParticle(player, Particle.DUST, pos, new ParticleColor(new Color(255, 100, 100)));
             }
-        }*/
-    }
-
-    public static void drawRayBlock(RayBlockResult result, Player player, boolean edge) {
-        /*result.lines(0.1, result.getContext().start().distance(result.getHit()),
-                vec -> player.getPlayerConnection().sendPacket(getPacket(vec,
-                        Pos.ZERO, binaryWriter -> {
-                            binaryWriter.writeFloat((float) 0 / 255);//R
-                            binaryWriter.writeFloat((float) 255 / 255);//G
-                            binaryWriter.writeFloat((float) 0 / 255);//B
-                            binaryWriter.writeFloat(0.1F);//Size
-                        })));
-
-        player.getPlayerConnection().sendPacket(getPacket(result.getHit(), new Pos(0, 0, 0), binaryWriter -> {
-            binaryWriter.writeFloat((float) 255 / 255);//R
-            binaryWriter.writeFloat((float) 0 / 255);//G
-            binaryWriter.writeFloat((float) 0 / 255);//B
-            binaryWriter.writeFloat(0.22F);//Size
-        }));
-
-        drawHitBox(result.getHitShape(), player, result.getBlockPosition(), edge);*/
-    }
-
-    public static void drawHitBox(BlockShape blockShape, Player player, Pos translated, boolean drawEdge) {
-        /*Vec offset = blockShape.offsetType() == OffsetType.NONE ? new Vec(0, 0, 0) : RayTrace.getOffset(translated, blockShape.getOffsetType());
-
-        for (Vec pos : blockShape.getPoints())
-            player.getPlayerConnection().sendPacket(getPacket(pos.add(offset), translated, binaryWriter -> {
-                binaryWriter.writeFloat((float) 255 / 255);//R
-                binaryWriter.writeFloat((float) 0 / 255);//G
-                binaryWriter.writeFloat((float) 255 / 255);//B
-                binaryWriter.writeFloat(0.1F);//Size
-            }));
-
-        if (drawEdge)
-            for (Edge edge : blockShape.getEdges())
-                drawEdge(edge, offset, player, translated);*/
-    }
-
-    /*public static void drawEdge(Edge edge, Vec offset, Player player, Pos translated) {
-        edge.getLines(0.15).forEach(position -> player.getPlayerConnection().sendPacket(getPacket(position.add(offset), translated, binaryWriter -> {
-            binaryWriter.writeFloat((float) 0 / 255);//R
-            binaryWriter.writeFloat((float) 0 / 255);//G
-            binaryWriter.writeFloat((float) 255 / 255);//B
-            binaryWriter.writeFloat(0.1F);//Size
-        })));
-    }*/
-
-
-    private static ParticlePacket getPacket(Point position, Point translated, Consumer<BinaryWriter> writerConsumer) {
-        if (writerConsumer == null)
-            writerConsumer = binaryWriter -> {
-            };
-        return ParticleCreator.createParticlePacket(Particle.DUST, true, translated.x() + position.x(), translated.y() + position.y(),
-                translated.z() + position.z(), 0f, 0f, 0f, 0, 0, writerConsumer);
+        }
     }
 }

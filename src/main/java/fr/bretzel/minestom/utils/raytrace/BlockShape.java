@@ -120,7 +120,7 @@ public class BlockShape extends IRayTrace {
         return relativeEnd().z();
     }
 
-    public boolean noCollision() {
+    public boolean empty() {
         return this == EMPTY;
     }
 
@@ -151,7 +151,7 @@ public class BlockShape extends IRayTrace {
     @Override
     RayBlockResult rayTraceBlock(RayTraceContext context, Point blockPosition, Point offset) {
         //No collision
-        if (noCollision())
+        if (empty())
             return null;
 
         RayBlockResult result = null;

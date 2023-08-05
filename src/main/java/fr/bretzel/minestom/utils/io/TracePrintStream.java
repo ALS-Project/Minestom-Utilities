@@ -11,6 +11,8 @@ public class TracePrintStream extends PrintStream {
     private final Logger logger = LoggerFactory.getLogger(TracePrintStream.class);
     private final Level level;
 
+    private String lastLine = "";
+
     public TracePrintStream(PrintStream original, Level level) {
         super(original);
         this.level = level;
@@ -23,6 +25,11 @@ public class TracePrintStream extends PrintStream {
     }
 
     protected void log(String log) {
+        if (log.equals(lastLine))
+            return;
+
+        lastLine = log;
+
         switch (level) {
             case WARN -> logger.warn(log);
             case ERROR -> logger.error(log);

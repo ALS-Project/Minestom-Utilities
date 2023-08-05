@@ -87,7 +87,7 @@ public class BlockSection extends IRayTrace {
         var rayDirection = MathsUtils.normalizeZeros(context.direction());
 
         var bbCentre = new Vec(moving.minX() + moving.width() / 2, moving.minY() + moving.height() / 2, moving.minZ() + moving.depth() / 2);
-        var rayCentre = rayStart.add(bbCentre).add(offset);
+        var rayCentre = rayStart.add(bbCentre);
 
         // Translate bounding box
         var bbOffMin = new Vec(minX() - rayCentre.x() + blockPosition.x() - moving.width() / 2, minY() - rayCentre.y() + blockPosition.y() - moving.height() / 2, minZ() - rayCentre.z() + blockPosition.z() - moving.depth() / 2);
@@ -104,14 +104,14 @@ public class BlockSection extends IRayTrace {
         var startY = rayStart.y();
         var startZ = rayStart.z();
 
-        final var minX = Math.min(offset.add(minX()).x(), offset.add(maxX()).x());
-        final var maxX = Math.max(offset.add(minX()).x(), offset.add(maxX()).x());
+        final var minX = Math.min(bbOffMin.x(), bbOffMax.x());
+        final var maxX = Math.max(bbOffMin.x(), bbOffMax.x());;
 
-        final var minY = Math.min(offset.add(minY()).y(), offset.add(maxY()).y());
-        final var maxY = Math.max(offset.add(minY()).y(), offset.add(maxY()).y());
+        final var minY = Math.min(bbOffMin.y(), bbOffMax.y());
+        final var maxY = Math.max(bbOffMin.y(), bbOffMax.y());
 
-        final var minZ = Math.min(offset.add(minZ()).z(), offset.add(maxZ()).z());
-        final var maxZ = Math.max(offset.add(minZ()).z(), offset.add(maxZ()).z());
+        final var minZ = Math.min(bbOffMin.z(), bbOffMax.z());
+        final var maxZ = Math.max(bbOffMin.z(), bbOffMax.z());
 
         // saving a few divisions below:
         // Note: If one of the direction vector components is 0.0, these
@@ -217,10 +217,6 @@ public class BlockSection extends IRayTrace {
             }
         }
 
-        if ((tMin > tyMax) || (tMax < tyMin)) {
-            return null;
-        }
-
         if (tyMin > tMin) {
             tMin = tyMin;
             hitBlockFaceMin = hitBlockFaceYMin;
@@ -275,20 +271,15 @@ public class BlockSection extends IRayTrace {
             }
         }
 
-        if ((tMin > tzMax) || (tMax < tzMin)) {
-            return null;
-        }
         if (tzMin > tMin) {
             tMin = tzMin;
             hitBlockFaceMin = hitBlockFaceZMin;
         }
+
         if (tzMax < tMax) {
             tMax = tzMax;
             hitBlockFaceMax = hitBlockFaceZMax;
         }
-
-        // intersections are behind the start:
-        if (tMax < 0.0D) return null;
 
         // intersections are to far away:
         if (tMin > context.distance()) {
@@ -308,8 +299,8 @@ public class BlockSection extends IRayTrace {
         }
 
         // reusing the newly created direction vector for the hit position:
-        Vec hitPosition = rayDirection.mul(t).add(rayStart);
-        return new RayBlockResult(hitPosition, context, hitBlockFace, parent());
+        Vec hitPosition = rayDirection.mul(t).add(rayStart).add(blockPosition);
+        return new RayBlockResult(hitPosition, blockPosition, context, hitBlockFace, parent());
     }
 
     @Override

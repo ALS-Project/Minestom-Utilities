@@ -6,6 +6,10 @@ import net.minestom.server.utils.binary.BinaryWriter;
 
 public record ParticleColor(Color color, float size) implements IParticleData {
 
+    public ParticleColor(Color color) {
+        this(color, 0.2F);
+    }
+
     @Override
     public void accept(BinaryWriter binaryWriter) {
         binaryWriter.writeFloat(color.red());//R
